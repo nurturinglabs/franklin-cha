@@ -48,6 +48,7 @@ export default function CallsPage() {
 
   const fetchData = useCallback(async () => {
     const sb = getSupabase();
+    if (!sb) { setLoading(false); return; }
     const [callsRes, responsesRes] = await Promise.all([
       sb.from("calls").select("*").order("started_at", { ascending: false }),
       sb.from("survey_responses").select("*"),
@@ -62,6 +63,7 @@ export default function CallsPage() {
     fetchData();
 
     const sb = getSupabase();
+    if (!sb) return;
     const channel = sb
       .channel("calls-realtime-list")
       .on("postgres_changes", { event: "*", schema: "public", table: "calls" }, () => {

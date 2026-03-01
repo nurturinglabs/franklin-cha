@@ -80,6 +80,7 @@ export default function CallDetailPage() {
   useEffect(() => {
     async function fetchData() {
       const sb = getSupabase();
+      if (!sb) { setLoading(false); return; }
       const [callRes, responsesRes] = await Promise.all([
         sb.from("calls").select("*").eq("id", callId).single(),
         sb

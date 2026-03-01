@@ -2,13 +2,14 @@ import { createClient, SupabaseClient } from "@supabase/supabase-js";
 
 let _supabase: SupabaseClient | null = null;
 
-export function getSupabase(): SupabaseClient {
+export function getSupabase(): SupabaseClient | null {
   if (!_supabase) {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
     if (!supabaseUrl || !supabaseAnonKey) {
-      throw new Error("Missing Supabase browser environment variables");
+      console.warn("Missing Supabase environment variables — data features disabled");
+      return null;
     }
 
     _supabase = createClient(supabaseUrl, supabaseAnonKey);

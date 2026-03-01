@@ -156,6 +156,7 @@ export default function DashboardPage() {
 
   const fetchData = useCallback(async () => {
     const sb = getSupabase();
+    if (!sb) { setLoading(false); return; }
     const [callsRes, responsesRes] = await Promise.all([
       sb.from("calls").select("*").order("started_at", { ascending: false }),
       sb.from("survey_responses").select("*"),
@@ -168,6 +169,7 @@ export default function DashboardPage() {
   useEffect(() => {
     fetchData();
     const sb = getSupabase();
+    if (!sb) return;
     const channel = sb
       .channel("calls-realtime")
       .on("postgres_changes", { event: "*", schema: "public", table: "calls" }, () => fetchData())
