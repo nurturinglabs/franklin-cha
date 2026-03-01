@@ -30,11 +30,22 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
+# env files
 .env*
+
+# PRD and documentation files
+*.prd
+*-prd.md
+*-prd.txt
+PRD*
+prd*
+docs/
 
 # vercel
 .vercel
+
+# claude / AI tooling
+.claude/
 
 # typescript
 *.tsbuildinfo

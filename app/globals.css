@@ -1,26 +1,182 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-inter);
+  --color-brand-50: #fffbeb;
+  --color-brand-100: #fef3c7;
+  --color-brand-200: #fde68a;
+  --color-brand-300: #fcd34d;
+  --color-brand-400: #fbbf24;
+  --color-brand-500: #f59e0b;
+  --color-brand-600: #d97706;
+  --color-brand-700: #b45309;
+  --color-brand-800: #92400e;
+  --color-brand-900: #78350f;
+  --color-navy-50: #f0f4ff;
+  --color-navy-100: #dbe4ff;
+  --color-navy-700: #1e3a5f;
+  --color-navy-800: #172554;
+  --color-navy-900: #0f172a;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  body {
+    background-color: #0b1120 !important;
+    color: #f8fafc;
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: #0b1120;
+  color: #f8fafc;
+}
+
+/* Slim scrollbar for slide-over panel */
+.panel-scroll::-webkit-scrollbar {
+  width: 5px;
+}
+.panel-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
+}
+.panel-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* ===== ANIMATION KEYFRAMES ===== */
+
+/* Chat bubble entrance: slide up + fade in */
+@keyframes bubble-in {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Typing indicator dot bounce */
+@keyframes typing-bounce {
+  0%, 60%, 100% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(-4px);
+  }
+}
+
+/* Typing indicator container: appear then disappear */
+@keyframes typing-appear {
+  0% { opacity: 0; }
+  10% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { opacity: 0; display: none; }
+}
+
+/* Voice waveform bar pulse */
+@keyframes waveform-bar {
+  0%, 100% {
+    transform: scaleY(0.3);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+/* ECG heartbeat line draw via stroke-dashoffset */
+@keyframes ecg-draw {
+  0% {
+    stroke-dashoffset: 600;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* ECG fade cycle */
+@keyframes ecg-fade {
+  0%, 10% { opacity: 0.12; }
+  30%, 70% { opacity: 0.25; }
+  90%, 100% { opacity: 0.12; }
+}
+
+/* Sound wave ring expansion */
+@keyframes ring-expand {
+  0% {
+    transform: scale(0.5);
+    opacity: 0.2;
+  }
+  100% {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}
+
+/* ===== ANIMATION UTILITIES ===== */
+
+/* Chat bubble staggered entrance */
+.animate-bubble-in {
+  animation: bubble-in 0.5s ease-out forwards;
+  opacity: 0;
+}
+.animate-bubble-in-1 { animation-delay: 0.8s; }
+.animate-bubble-in-2 { animation-delay: 2.4s; }
+.animate-bubble-in-3 { animation-delay: 4.0s; }
+
+/* Typing indicator dots */
+.animate-typing-dot {
+  animation: typing-bounce 1s ease-in-out infinite;
+}
+
+/* Typing indicator containers */
+.typing-indicator-1 {
+  animation: typing-appear 0.8s ease-in-out 0s forwards;
+  opacity: 0;
+}
+.typing-indicator-2 {
+  animation: typing-appear 0.8s ease-in-out 1.6s forwards;
+  opacity: 0;
+}
+.typing-indicator-3 {
+  animation: typing-appear 0.8s ease-in-out 3.2s forwards;
+  opacity: 0;
+}
+
+/* Voice waveform */
+.animate-waveform {
+  animation: waveform-bar 1.2s ease-in-out infinite;
+  transform-origin: bottom;
+}
+
+/* ECG line */
+.animate-ecg-draw {
+  stroke-dasharray: 600;
+  stroke-dashoffset: 600;
+  animation: ecg-draw 3s ease-in-out infinite;
+}
+.animate-ecg-fade {
+  animation: ecg-fade 3s ease-in-out infinite;
+}
+
+/* Sound wave rings */
+.animate-ring {
+  animation: ring-expand 4s ease-out infinite;
+}
+
+/* Accessibility: respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .animate-bubble-in,
+  .animate-typing-dot,
+  .typing-indicator-1,
+  .typing-indicator-2,
+  .typing-indicator-3,
+  .animate-waveform,
+  .animate-ecg-draw,
+  .animate-ecg-fade,
+  .animate-ring {
+    animation: none !important;
+    opacity: 1 !important;
+  }
 }
