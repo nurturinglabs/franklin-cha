@@ -61,9 +61,9 @@ export default function Home() {
                 Call to participate
               </p>
               <div className="flex items-center gap-3">
-                <p className="text-2xl font-bold text-amber-400 tracking-wide">
-                  (414) XXX-XXXX
-                </p>
+                <a href="tel:+14145090699" className="text-2xl font-bold text-amber-400 tracking-wide hover:text-amber-300 transition-colors">
+                  (414) 509-0699
+                </a>
                 {/* Voice waveform bars */}
                 <div className="flex items-end gap-[3px] h-6">
                   {[0, 0.2, 0.4, 0.1, 0.3, 0.5, 0.25].map((delay, i) => (
