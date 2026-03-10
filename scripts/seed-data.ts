@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
-import "dotenv/config";
+import { config } from "dotenv";
+config({ path: ".env.local" });
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -11,266 +12,401 @@ if (!supabaseUrl || !serviceRoleKey) {
 
 const supabase = createClient(supabaseUrl, serviceRoleKey);
 
-const DUMMY_CALLS = [
-  {
-    retell_call_id: "call_demo_001",
-    call_status: "completed",
-    started_at: "2026-02-25T14:14:00Z",
-    ended_at: "2026-02-25T14:21:23Z",
-    duration_seconds: 443,
-    questions_answered: 15,
-    completion_rate: 100,
-    sentiment: "positive",
-    call_summary: "Enthusiastic resident, concerned about mental health access and community parks. Feels connected to the community.",
-    transcript: [
-      { role: "agent", content: "Hi there! Thank you for calling the Franklin Community Health Survey Line. I'm here to help collect your input for the City of Franklin's Community Health Assessment. This is a short, confidential survey — it takes about 7 to 8 minutes. Would you like to go ahead?" },
-      { role: "user", content: "Yes, I'd love to participate!" },
-      { role: "agent", content: "Great! Let's start with a big-picture question. What do you think are the most important factors for a healthy community?" },
-      { role: "user", content: "I think safe neighborhoods, good schools, and access to parks and recreation are the most important. Also having good healthcare nearby." },
-      { role: "agent", content: "That's really helpful, thank you. Now, what do you think are the most important health problems in the Franklin community?" },
-      { role: "user", content: "Mental health is a big one. I also think substance abuse is growing, and obesity is a concern for a lot of families." },
-      { role: "agent", content: "Thank you for sharing that. What about risky behaviors? What behaviors do you think have the biggest impact on health in our community?" },
-      { role: "user", content: "Probably lack of exercise and poor eating habits. Also drug use, especially among younger people." },
-      { role: "agent", content: "Good insights. On a scale of 1 to 5, with 1 being very unhealthy and 5 being very healthy, how would you rate Franklin overall as a healthy community?" },
-      { role: "user", content: "I'd say a 4. It's pretty good here overall." },
-      { role: "agent", content: "Great. Now, how connected do you feel to the Franklin community? On a scale of 1 to 5?" },
-      { role: "user", content: "I'd say about a 4. I feel pretty connected through my kids' school and the local parks." },
-      { role: "agent", content: "That's wonderful. Do you feel seen and heard in your community?" },
-      { role: "user", content: "Yes, mostly. The city does a decent job of listening to residents." },
-      { role: "agent", content: "What is one thing that would help you feel more connected to your community?" },
-      { role: "user", content: "More community events in the parks, especially during summer. Family-friendly events." },
-      { role: "agent", content: "Love that idea. How would you rate your access to mental health resources in Franklin? 1 to 5?" },
-      { role: "user", content: "Hmm, I'd say a 3. It could be better. Wait times are long." },
-      { role: "agent", content: "Have you or a family member needed mental health services but had difficulty accessing them in the past 12 months?" },
-      { role: "user", content: "Yes, my teenager needed counseling and we had to wait 6 weeks for an appointment." },
-      { role: "agent", content: "I'm sorry to hear that. What barriers have you experienced?" },
-      { role: "user", content: "Mainly availability. There just aren't enough providers. Cost is also a factor since our insurance doesn't cover everything." },
-      { role: "agent", content: "Thank you for sharing. During a normal week, how many days do you exercise for at least 30 minutes?" },
-      { role: "user", content: "About 4 days a week. I try to walk or jog most mornings." },
-      { role: "agent", content: "That's great! How would you rate your access to affordable, healthy food? 1 to 5?" },
-      { role: "user", content: "I'd give it a 4. We have some good grocery stores nearby." },
-      { role: "agent", content: "How would you rate your own personal health overall? 1 to 5?" },
-      { role: "user", content: "I'd say a 4. Pretty healthy overall." },
-      { role: "agent", content: "When you're sick, where do you typically go first?" },
-      { role: "user", content: "My family doctor, always." },
-      { role: "agent", content: "Last quick question — could you share your approximate age range and zip code?" },
-      { role: "user", content: "I'm in the 40 to 54 range and my zip code is 53132." },
-      { role: "agent", content: "That's all the questions! Thank you so much for taking the time. Your input will directly help improve health and wellness in Franklin. Have a wonderful day!" },
-    ],
-  },
-  {
-    retell_call_id: "call_demo_002",
-    call_status: "completed",
-    started_at: "2026-02-25T15:01:00Z",
-    ended_at: "2026-02-25T15:05:12Z",
-    duration_seconds: 252,
-    questions_answered: 9,
-    completion_rate: 60,
-    sentiment: "neutral",
-    call_summary: "Resident completed most questions but ended early. Concerned about healthcare costs.",
-    transcript: [
-      { role: "agent", content: "Hi there! Thank you for calling the Franklin Community Health Survey Line." },
-      { role: "user", content: "Hi, sure, let's do this." },
-    ],
-  },
-  {
-    retell_call_id: "call_demo_003",
-    call_status: "completed",
-    started_at: "2026-02-26T09:22:00Z",
-    ended_at: "2026-02-26T09:30:05Z",
-    duration_seconds: 485,
-    questions_answered: 15,
-    completion_rate: 100,
-    sentiment: "positive",
-    call_summary: "Senior resident, very engaged. Strong feelings about community connectedness and healthcare access.",
-    transcript: [
-      { role: "agent", content: "Hi! Thank you for calling the Franklin Community Health Survey Line." },
-      { role: "user", content: "Hello dear, I saw the number and thought I'd call in." },
-    ],
-  },
-  {
-    retell_call_id: "call_demo_004",
-    call_status: "completed",
-    started_at: "2026-02-26T11:10:00Z",
-    ended_at: "2026-02-26T11:11:30Z",
-    duration_seconds: 90,
-    questions_answered: 2,
-    completion_rate: 13.33,
-    sentiment: "negative",
-    call_summary: "Caller ended early after 2 questions.",
-    transcript: [
-      { role: "agent", content: "Hi there! Thank you for calling the Franklin Community Health Survey Line." },
-      { role: "user", content: "Actually, I don't have time right now. Sorry." },
-    ],
-  },
-  {
-    retell_call_id: "call_demo_005",
-    call_status: "completed",
-    started_at: "2026-02-27T14:45:00Z",
-    ended_at: "2026-02-27T14:51:58Z",
-    duration_seconds: 418,
-    questions_answered: 15,
-    completion_rate: 100,
-    sentiment: "positive",
-    call_summary: "Young adult, focused on mental health and food access. Very supportive of the survey initiative.",
-    transcript: [
-      { role: "agent", content: "Hi there! Thank you for calling." },
-      { role: "user", content: "Hey! Yeah, I want to give my input." },
-    ],
-  },
-  {
-    retell_call_id: "call_demo_006",
-    call_status: "completed",
-    started_at: "2026-02-27T16:30:00Z",
-    ended_at: "2026-02-27T16:37:42Z",
-    duration_seconds: 462,
-    questions_answered: 15,
-    completion_rate: 100,
-    sentiment: "positive",
-    call_summary: "Engaged parent, concerned about youth substance abuse and nutrition in schools.",
-    transcript: [
-      { role: "agent", content: "Hi! Thank you for calling the Franklin Community Health Survey Line." },
-      { role: "user", content: "Yes, happy to help!" },
-    ],
-  },
-  {
-    retell_call_id: "call_demo_007",
-    call_status: "completed",
-    started_at: "2026-02-28T10:15:00Z",
-    ended_at: "2026-02-28T10:21:30Z",
-    duration_seconds: 390,
-    questions_answered: 12,
-    completion_rate: 80,
-    sentiment: "neutral",
-    call_summary: "Resident skipped some questions. Concerned about healthcare costs and mental health stigma.",
-    transcript: [
-      { role: "agent", content: "Hi there! Thank you for calling." },
-      { role: "user", content: "Hi, let's get started." },
-    ],
-  },
-  {
-    retell_call_id: "call_demo_008",
-    call_status: "completed",
-    started_at: "2026-02-28T13:45:00Z",
-    ended_at: "2026-02-28T13:52:15Z",
-    duration_seconds: 435,
-    questions_answered: 15,
-    completion_rate: 100,
-    sentiment: "positive",
-    call_summary: "Very positive about Franklin. Highlighted parks and recreation as strengths.",
-    transcript: [
-      { role: "agent", content: "Hi! Thank you for calling." },
-      { role: "user", content: "Hello! I love that you're doing this." },
-    ],
-  },
+// --- Helpers ---
+function pick<T>(arr: T[]): T {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+function randInt(min: number, max: number): number {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+function weightedPick<T>(arr: T[], weights: number[]): T {
+  const total = weights.reduce((a, b) => a + b, 0);
+  let r = Math.random() * total;
+  for (let i = 0; i < arr.length; i++) {
+    r -= weights[i];
+    if (r <= 0) return arr[i];
+  }
+  return arr[arr.length - 1];
+}
+
+// --- Response Pools ---
+const Q1_RESPONSES = [
+  "Safe neighborhoods, good schools, and access to parks and recreation.",
+  "Affordable healthcare, clean air and water, and strong community bonds.",
+  "Access to mental health services, walkable streets, and good jobs.",
+  "Healthy food options, safe places to exercise, and quality healthcare.",
+  "Good public transportation, affordable housing, and access to doctors.",
+  "Strong local economy, low crime, and community engagement.",
+  "Clean environment, access to preventive care, and family support services.",
+  "Parks and green spaces, good hospitals, and affordable medications.",
+  "Quality education, community safety, and mental health resources.",
+  "Low pollution, access to fresh food, and support for seniors.",
+  "Youth programs, walkable neighborhoods, and substance abuse prevention.",
+  "A sense of community, affordable healthcare, and safe streets.",
 ];
 
-const RESPONSES_DATA: Record<string, Array<{
-  question_number: number;
-  question_section: string;
-  question_text: string;
-  response_type: string;
-  response_raw: string;
-  response_numeric: number | null;
-  response_boolean: boolean | null;
-}>> = {
-  call_demo_001: [
-    { question_number: 1, question_section: "Community Health Perception", question_text: "What are the most important factors for a healthy community?", response_type: "open_ended", response_raw: "Safe neighborhoods, good schools, access to parks and recreation, and good healthcare nearby.", response_numeric: null, response_boolean: null },
-    { question_number: 2, question_section: "Community Health Perception", question_text: "What are the most important health problems in Franklin?", response_type: "open_ended", response_raw: "Mental health is a big one. Substance abuse is growing, and obesity is a concern for families.", response_numeric: null, response_boolean: null },
-    { question_number: 3, question_section: "Community Health Perception", question_text: "What risky behaviors have the biggest impact on community health?", response_type: "open_ended", response_raw: "Lack of exercise, poor eating habits, and drug use among younger people.", response_numeric: null, response_boolean: null },
-    { question_number: 4, question_section: "Community Health Perception", question_text: "Rate Franklin as a healthy community (1-5)", response_type: "scale", response_raw: "I'd say a 4. It's pretty good here overall.", response_numeric: 4, response_boolean: null },
-    { question_number: 5, question_section: "Community Connectedness", question_text: "How connected do you feel to the Franklin community? (1-5)", response_type: "scale", response_raw: "About a 4. Connected through school and local parks.", response_numeric: 4, response_boolean: null },
-    { question_number: 6, question_section: "Community Connectedness", question_text: "Do you feel seen and heard in your community?", response_type: "yes_no", response_raw: "Yes, mostly. The city does a decent job of listening.", response_numeric: null, response_boolean: true },
-    { question_number: 7, question_section: "Community Connectedness", question_text: "What would help you feel more connected?", response_type: "open_ended", response_raw: "More community events in the parks, especially during summer. Family-friendly events.", response_numeric: null, response_boolean: null },
-    { question_number: 8, question_section: "Mental & Behavioral Health", question_text: "Rate your access to mental health resources (1-5)", response_type: "scale", response_raw: "I'd say a 3. Wait times are long.", response_numeric: 3, response_boolean: null },
-    { question_number: 9, question_section: "Mental & Behavioral Health", question_text: "Have you or family had difficulty accessing mental health services in past 12 months?", response_type: "yes_no", response_raw: "Yes, my teenager waited 6 weeks for an appointment.", response_numeric: null, response_boolean: true },
-    { question_number: 10, question_section: "Mental & Behavioral Health", question_text: "What barriers have you experienced accessing mental/behavioral health support?", response_type: "open_ended", response_raw: "Availability — not enough providers. Cost is also a factor.", response_numeric: null, response_boolean: null },
-    { question_number: 11, question_section: "Physical Activity & Nutrition", question_text: "How many days per week do you exercise for 30+ minutes?", response_type: "multiple_choice", response_raw: "About 4 days a week.", response_numeric: 4, response_boolean: null },
-    { question_number: 12, question_section: "Physical Activity & Nutrition", question_text: "Rate your access to affordable healthy food (1-5)", response_type: "scale", response_raw: "I'd give it a 4. Good grocery stores nearby.", response_numeric: 4, response_boolean: null },
-    { question_number: 13, question_section: "Healthcare Access", question_text: "Rate your own personal health (1-5)", response_type: "scale", response_raw: "I'd say a 4. Pretty healthy overall.", response_numeric: 4, response_boolean: null },
-    { question_number: 14, question_section: "Healthcare Access", question_text: "Where do you go first when sick?", response_type: "multiple_choice", response_raw: "My family doctor, always.", response_numeric: null, response_boolean: null },
-    { question_number: 15, question_section: "Demographics", question_text: "Age range and zip code", response_type: "demographic", response_raw: "40 to 54 range, zip 53132.", response_numeric: null, response_boolean: null },
-  ],
-  call_demo_002: [
-    { question_number: 1, question_section: "Community Health Perception", question_text: "What are the most important factors for a healthy community?", response_type: "open_ended", response_raw: "Good jobs, affordable housing, and access to healthcare.", response_numeric: null, response_boolean: null },
-    { question_number: 2, question_section: "Community Health Perception", question_text: "What are the most important health problems in Franklin?", response_type: "open_ended", response_raw: "Heart disease and diabetes. A lot of people I know are dealing with those.", response_numeric: null, response_boolean: null },
-    { question_number: 3, question_section: "Community Health Perception", question_text: "What risky behaviors have the biggest impact on community health?", response_type: "open_ended", response_raw: "Alcohol use and smoking. Also people not going to the doctor regularly.", response_numeric: null, response_boolean: null },
-    { question_number: 4, question_section: "Community Health Perception", question_text: "Rate Franklin as a healthy community (1-5)", response_type: "scale", response_raw: "A 3 I guess.", response_numeric: 3, response_boolean: null },
-    { question_number: 5, question_section: "Community Connectedness", question_text: "How connected do you feel to the Franklin community? (1-5)", response_type: "scale", response_raw: "Maybe a 2. I mostly keep to myself.", response_numeric: 2, response_boolean: null },
-    { question_number: 6, question_section: "Community Connectedness", question_text: "Do you feel seen and heard in your community?", response_type: "yes_no", response_raw: "Not really, no.", response_numeric: null, response_boolean: false },
-    { question_number: 8, question_section: "Mental & Behavioral Health", question_text: "Rate your access to mental health resources (1-5)", response_type: "scale", response_raw: "A 2. I wouldn't even know where to go.", response_numeric: 2, response_boolean: null },
-    { question_number: 9, question_section: "Mental & Behavioral Health", question_text: "Have you or family had difficulty accessing mental health services in past 12 months?", response_type: "yes_no", response_raw: "No, haven't tried.", response_numeric: null, response_boolean: false },
-    { question_number: 13, question_section: "Healthcare Access", question_text: "Rate your own personal health (1-5)", response_type: "scale", response_raw: "A 3.", response_numeric: 3, response_boolean: null },
-  ],
-  call_demo_003: [
-    { question_number: 1, question_section: "Community Health Perception", question_text: "What are the most important factors for a healthy community?", response_type: "open_ended", response_raw: "Good healthcare, safe streets for walking, and activities for seniors. Also affordable medications.", response_numeric: null, response_boolean: null },
-    { question_number: 2, question_section: "Community Health Perception", question_text: "What are the most important health problems in Franklin?", response_type: "open_ended", response_raw: "Aging population issues, loneliness among seniors, and mental health. Also diabetes.", response_numeric: null, response_boolean: null },
-    { question_number: 4, question_section: "Community Health Perception", question_text: "Rate Franklin as a healthy community (1-5)", response_type: "scale", response_raw: "I'd say a 4. It's been a good place to live.", response_numeric: 4, response_boolean: null },
-    { question_number: 5, question_section: "Community Connectedness", question_text: "How connected do you feel to the Franklin community? (1-5)", response_type: "scale", response_raw: "A 5! I've lived here 30 years.", response_numeric: 5, response_boolean: null },
-    { question_number: 6, question_section: "Community Connectedness", question_text: "Do you feel seen and heard in your community?", response_type: "yes_no", response_raw: "Yes, absolutely.", response_numeric: null, response_boolean: true },
-    { question_number: 7, question_section: "Community Connectedness", question_text: "What would help you feel more connected?", response_type: "open_ended", response_raw: "Senior center programs and transportation services for those who can't drive.", response_numeric: null, response_boolean: null },
-    { question_number: 8, question_section: "Mental & Behavioral Health", question_text: "Rate your access to mental health resources (1-5)", response_type: "scale", response_raw: "A 2. Not many options for seniors.", response_numeric: 2, response_boolean: null },
-    { question_number: 9, question_section: "Mental & Behavioral Health", question_text: "Have you or family had difficulty accessing mental health services in past 12 months?", response_type: "yes_no", response_raw: "Yes, my husband needed help after his surgery.", response_numeric: null, response_boolean: true },
-    { question_number: 10, question_section: "Mental & Behavioral Health", question_text: "What barriers have you experienced accessing mental/behavioral health support?", response_type: "open_ended", response_raw: "Transportation is the biggest one. And cost. Medicare doesn't cover everything.", response_numeric: null, response_boolean: null },
-    { question_number: 11, question_section: "Physical Activity & Nutrition", question_text: "How many days per week do you exercise for 30+ minutes?", response_type: "multiple_choice", response_raw: "About 3 days. I walk around the neighborhood.", response_numeric: 3, response_boolean: null },
-    { question_number: 12, question_section: "Physical Activity & Nutrition", question_text: "Rate your access to affordable healthy food (1-5)", response_type: "scale", response_raw: "A 3. The grocery store is a bit far.", response_numeric: 3, response_boolean: null },
-    { question_number: 13, question_section: "Healthcare Access", question_text: "Rate your own personal health (1-5)", response_type: "scale", response_raw: "A 3 for my age. Could be worse!", response_numeric: 3, response_boolean: null },
-    { question_number: 14, question_section: "Healthcare Access", question_text: "Where do you go first when sick?", response_type: "multiple_choice", response_raw: "My family doctor. Same one for 20 years.", response_numeric: null, response_boolean: null },
-    { question_number: 15, question_section: "Demographics", question_text: "Age range and zip code", response_type: "demographic", response_raw: "65 and over, zip 53132.", response_numeric: null, response_boolean: null },
-  ],
-  call_demo_004: [
-    { question_number: 1, question_section: "Community Health Perception", question_text: "What are the most important factors for a healthy community?", response_type: "open_ended", response_raw: "Safety and clean environment.", response_numeric: null, response_boolean: null },
-    { question_number: 4, question_section: "Community Health Perception", question_text: "Rate Franklin as a healthy community (1-5)", response_type: "scale", response_raw: "3", response_numeric: 3, response_boolean: null },
-  ],
-  call_demo_005: [
-    { question_number: 1, question_section: "Community Health Perception", question_text: "What are the most important factors for a healthy community?", response_type: "open_ended", response_raw: "Mental health resources, affordable housing, and walkable neighborhoods.", response_numeric: null, response_boolean: null },
-    { question_number: 2, question_section: "Community Health Perception", question_text: "What are the most important health problems in Franklin?", response_type: "open_ended", response_raw: "Mental health and anxiety, especially post-pandemic. Also substance abuse.", response_numeric: null, response_boolean: null },
-    { question_number: 4, question_section: "Community Health Perception", question_text: "Rate Franklin as a healthy community (1-5)", response_type: "scale", response_raw: "A 3.", response_numeric: 3, response_boolean: null },
-    { question_number: 5, question_section: "Community Connectedness", question_text: "How connected do you feel to the Franklin community? (1-5)", response_type: "scale", response_raw: "A 3.", response_numeric: 3, response_boolean: null },
-    { question_number: 6, question_section: "Community Connectedness", question_text: "Do you feel seen and heard in your community?", response_type: "yes_no", response_raw: "Somewhat. I wish there were more ways for young people to get involved.", response_numeric: null, response_boolean: true },
-    { question_number: 7, question_section: "Community Connectedness", question_text: "What would help you feel more connected?", response_type: "open_ended", response_raw: "More events for people in their 20s and 30s. Not just family stuff.", response_numeric: null, response_boolean: null },
-    { question_number: 8, question_section: "Mental & Behavioral Health", question_text: "Rate your access to mental health resources (1-5)", response_type: "scale", response_raw: "A 2. It's really hard to find affordable therapy.", response_numeric: 2, response_boolean: null },
-    { question_number: 9, question_section: "Mental & Behavioral Health", question_text: "Have you or family had difficulty accessing mental health services in past 12 months?", response_type: "yes_no", response_raw: "Yes, I've been on a waitlist for months.", response_numeric: null, response_boolean: true },
-    { question_number: 10, question_section: "Mental & Behavioral Health", question_text: "What barriers have you experienced accessing mental/behavioral health support?", response_type: "open_ended", response_raw: "Cost and long wait times. Stigma too — people don't talk about it.", response_numeric: null, response_boolean: null },
-    { question_number: 11, question_section: "Physical Activity & Nutrition", question_text: "How many days per week do you exercise for 30+ minutes?", response_type: "multiple_choice", response_raw: "5 days. I go to the gym.", response_numeric: 5, response_boolean: null },
-    { question_number: 12, question_section: "Physical Activity & Nutrition", question_text: "Rate your access to affordable healthy food (1-5)", response_type: "scale", response_raw: "A 3. Healthy food is expensive.", response_numeric: 3, response_boolean: null },
-    { question_number: 13, question_section: "Healthcare Access", question_text: "Rate your own personal health (1-5)", response_type: "scale", response_raw: "A 4. I'm in good shape.", response_numeric: 4, response_boolean: null },
-    { question_number: 14, question_section: "Healthcare Access", question_text: "Where do you go first when sick?", response_type: "multiple_choice", response_raw: "Urgent care. I don't have a regular doctor.", response_numeric: null, response_boolean: null },
-    { question_number: 15, question_section: "Demographics", question_text: "Age range and zip code", response_type: "demographic", response_raw: "Under 25, zip 53132.", response_numeric: null, response_boolean: null },
-  ],
-  call_demo_006: [
-    { question_number: 4, question_section: "Community Health Perception", question_text: "Rate Franklin as a healthy community (1-5)", response_type: "scale", response_raw: "A 5. I love it here.", response_numeric: 5, response_boolean: null },
-    { question_number: 5, question_section: "Community Connectedness", question_text: "How connected do you feel to the Franklin community? (1-5)", response_type: "scale", response_raw: "A 4.", response_numeric: 4, response_boolean: null },
-    { question_number: 6, question_section: "Community Connectedness", question_text: "Do you feel seen and heard in your community?", response_type: "yes_no", response_raw: "Yes, definitely.", response_numeric: null, response_boolean: true },
-    { question_number: 8, question_section: "Mental & Behavioral Health", question_text: "Rate your access to mental health resources (1-5)", response_type: "scale", response_raw: "A 4.", response_numeric: 4, response_boolean: null },
-    { question_number: 9, question_section: "Mental & Behavioral Health", question_text: "Have you or family had difficulty accessing mental health services in past 12 months?", response_type: "yes_no", response_raw: "No, we've been fine.", response_numeric: null, response_boolean: false },
-    { question_number: 12, question_section: "Physical Activity & Nutrition", question_text: "Rate your access to affordable healthy food (1-5)", response_type: "scale", response_raw: "A 5. We have great options.", response_numeric: 5, response_boolean: null },
-    { question_number: 13, question_section: "Healthcare Access", question_text: "Rate your own personal health (1-5)", response_type: "scale", response_raw: "A 5. Feeling great!", response_numeric: 5, response_boolean: null },
-  ],
-  call_demo_007: [
-    { question_number: 4, question_section: "Community Health Perception", question_text: "Rate Franklin as a healthy community (1-5)", response_type: "scale", response_raw: "A 3.", response_numeric: 3, response_boolean: null },
-    { question_number: 5, question_section: "Community Connectedness", question_text: "How connected do you feel to the Franklin community? (1-5)", response_type: "scale", response_raw: "A 2. I'm new here.", response_numeric: 2, response_boolean: null },
-    { question_number: 6, question_section: "Community Connectedness", question_text: "Do you feel seen and heard in your community?", response_type: "yes_no", response_raw: "No, not yet.", response_numeric: null, response_boolean: false },
-    { question_number: 8, question_section: "Mental & Behavioral Health", question_text: "Rate your access to mental health resources (1-5)", response_type: "scale", response_raw: "A 1. No idea where to even start.", response_numeric: 1, response_boolean: null },
-    { question_number: 13, question_section: "Healthcare Access", question_text: "Rate your own personal health (1-5)", response_type: "scale", response_raw: "A 2.", response_numeric: 2, response_boolean: null },
-  ],
-  call_demo_008: [
-    { question_number: 4, question_section: "Community Health Perception", question_text: "Rate Franklin as a healthy community (1-5)", response_type: "scale", response_raw: "A 5!", response_numeric: 5, response_boolean: null },
-    { question_number: 5, question_section: "Community Connectedness", question_text: "How connected do you feel to the Franklin community? (1-5)", response_type: "scale", response_raw: "A 5. Very connected.", response_numeric: 5, response_boolean: null },
-    { question_number: 6, question_section: "Community Connectedness", question_text: "Do you feel seen and heard in your community?", response_type: "yes_no", response_raw: "Yes!", response_numeric: null, response_boolean: true },
-    { question_number: 8, question_section: "Mental & Behavioral Health", question_text: "Rate your access to mental health resources (1-5)", response_type: "scale", response_raw: "A 3.", response_numeric: 3, response_boolean: null },
-    { question_number: 9, question_section: "Mental & Behavioral Health", question_text: "Have you or family had difficulty accessing mental health services in past 12 months?", response_type: "yes_no", response_raw: "No.", response_numeric: null, response_boolean: false },
-    { question_number: 12, question_section: "Physical Activity & Nutrition", question_text: "Rate your access to affordable healthy food (1-5)", response_type: "scale", response_raw: "A 4.", response_numeric: 4, response_boolean: null },
-    { question_number: 13, question_section: "Healthcare Access", question_text: "Rate your own personal health (1-5)", response_type: "scale", response_raw: "A 4.", response_numeric: 4, response_boolean: null },
-    { question_number: 14, question_section: "Healthcare Access", question_text: "Where do you go first when sick?", response_type: "multiple_choice", response_raw: "Family doctor.", response_numeric: null, response_boolean: null },
-    { question_number: 15, question_section: "Demographics", question_text: "Age range and zip code", response_type: "demographic", response_raw: "26-39, zip 53154.", response_numeric: null, response_boolean: null },
-  ],
+const Q2_RESPONSES = [
+  "Mental health issues and substance abuse. Also obesity.",
+  "Heart disease and diabetes. A lot of people are dealing with those.",
+  "Mental health, especially anxiety and depression. Also drug use.",
+  "Obesity and lack of exercise. Also alcohol abuse.",
+  "Chronic diseases like diabetes, heart disease, and cancer.",
+  "Substance abuse and mental health. Especially among young people.",
+  "Aging population health issues and access to care.",
+  "Stress and mental health. The pandemic made things worse.",
+  "Drug and alcohol abuse, obesity, and mental health stigma.",
+  "Healthcare access gaps, especially for lower income families.",
+  "Mental health for teenagers and young adults. Also vaping.",
+  "Loneliness and isolation, especially among older adults.",
+];
+
+const Q3_RESPONSES = [
+  "Lack of exercise and poor eating habits. Also drug use among youth.",
+  "Excessive drinking and smoking. Not going to the doctor regularly.",
+  "Screen time, sedentary lifestyles, and vaping among teenagers.",
+  "Substance abuse, unprotected sex, and reckless driving.",
+  "Poor diet, not enough sleep, and too much alcohol.",
+  "Drug use, especially opioids. Also distracted driving.",
+  "Overeating, not exercising, and social media addiction.",
+  "Smoking, binge drinking, and avoiding preventive healthcare.",
+  "Vaping, drug experimentation, and poor nutrition choices.",
+  "Not wearing seatbelts, texting while driving, and excessive drinking.",
+];
+
+const Q4_SCALE = [3, 3, 3, 4, 4, 4, 4, 4, 5, 5, 2, 3]; // avg ~3.7
+const Q4_RESPONSES: Record<number, string[]> = {
+  2: ["A 2. There's a lot of room for improvement.", "I'd say 2. We need better healthcare access."],
+  3: ["A 3. It's okay but could be better.", "I'd give it a 3. Average.", "Maybe a 3. Some things are good, some not."],
+  4: ["A 4. It's pretty good here overall.", "I'd say 4. Franklin is a nice place to live.", "A 4. We have good parks and schools."],
+  5: ["A 5! I love it here.", "Definitely a 5. Franklin is wonderful.", "5 out of 5. Great community."],
 };
 
-async function seed() {
-  console.log("Seeding dummy data...");
+const Q5_SCALE = [2, 3, 3, 3, 4, 4, 4, 4, 5, 5, 2, 3]; // avg ~3.5
+const Q5_RESPONSES: Record<number, string[]> = {
+  2: ["A 2. I mostly keep to myself.", "Maybe a 2. I'm fairly new here.", "A 2. I don't know many people."],
+  3: ["A 3. Somewhat connected.", "I'd say a 3. I know my neighbors but that's about it.", "About a 3."],
+  4: ["A 4. I feel connected through my kids' school and neighborhood.", "A 4. Pretty connected through church and community events.", "I'd say 4. Good connections through local organizations."],
+  5: ["A 5! I've lived here for years and love it.", "Definitely a 5. Very connected.", "A 5. I know everyone on my block."],
+};
 
-  for (const call of DUMMY_CALLS) {
+const Q6_YES_NO = [true, true, true, true, true, false, false, true, true, false]; // ~70% yes
+const Q6_RESPONSES: Record<string, string[]> = {
+  yes: ["Yes, mostly. The city listens.", "Yes, I feel heard.", "Yeah, I think so. Our alderperson is responsive.", "Yes, through community meetings and events.", "Mostly yes. There are good channels to voice concerns."],
+  no: ["Not really, no.", "Not always. I feel overlooked sometimes.", "No, I don't think the city pays attention to everyone equally.", "Honestly, not much. It's hard to get involved."],
+};
+
+const Q7_RESPONSES = [
+  "More community events in the parks, especially during summer.",
+  "A community center with regular programming for all ages.",
+  "More volunteer opportunities and neighborhood meetups.",
+  "Better communication from the city about events and meetings.",
+  "Events for young adults, not just families.",
+  "Senior center programs and better transportation for elderly.",
+  "Block parties and neighborhood gatherings.",
+  "More cultural events that celebrate diversity.",
+  "Online community forums or a neighborhood app.",
+  "After-school programs and youth sports leagues.",
+  "Walking groups and outdoor fitness classes.",
+  "Regular town halls where residents can share concerns.",
+];
+
+const Q8_SCALE = [1, 2, 2, 2, 3, 3, 3, 3, 4, 4, 2, 3]; // avg ~2.7
+const Q8_RESPONSES: Record<number, string[]> = {
+  1: ["A 1. I have no idea where to even start.", "1. There's basically nothing available."],
+  2: ["A 2. Very limited options.", "I'd say 2. Not many affordable options.", "A 2. Long wait times and few providers."],
+  3: ["A 3. It could be better. Wait times are long.", "Maybe a 3. Some resources but hard to access.", "A 3. There are options but they're expensive."],
+  4: ["A 4. I've had good luck finding help.", "A 4. Decent resources available.", "I'd say 4. My insurance covers most of it."],
+};
+
+const Q9_YES_NO = [true, true, true, false, false, true, false, true, true, false]; // ~60% yes
+const Q9_RESPONSES: Record<string, string[]> = {
+  yes: ["Yes, my teenager waited weeks for an appointment.", "Yes, I couldn't find a therapist accepting new patients.", "Yes, the wait times are terrible.", "Yes, my spouse needed help and we couldn't afford it.", "Yes, we had to drive 30 minutes to find someone."],
+  no: ["No, we haven't needed it.", "No, thankfully not.", "No, haven't tried honestly.", "No, we've been okay."],
+};
+
+const Q10_RESPONSES = [
+  "Cost and long wait times. Insurance doesn't cover enough.",
+  "Not enough providers in the area. Had to go to Milwaukee.",
+  "Stigma. People don't want to talk about it or be seen going.",
+  "Transportation — hard to get to appointments without a car.",
+  "Cost is the biggest barrier. Therapy is expensive.",
+  "Availability. Most therapists have months-long waitlists.",
+  "My insurance doesn't cover mental health well.",
+  "Finding providers who accept Medicaid is really hard.",
+  "Didn't know where to look. There's no central resource.",
+  "Language barriers. Hard to find Spanish-speaking providers.",
+  "Long wait times and lack of evening/weekend appointments.",
+  "Cost, availability, and not knowing where to start looking.",
+];
+
+const Q11_VALUES = [0, 1, 2, 2, 3, 3, 3, 4, 4, 5, 5, 7]; // avg ~3.3
+const Q11_RESPONSES: Record<number, string[]> = {
+  0: ["Honestly, zero. I don't exercise.", "None. I'm pretty sedentary."],
+  1: ["Maybe once a week if I'm lucky.", "About 1 day."],
+  2: ["About 2 days a week.", "Twice a week, usually weekends."],
+  3: ["About 3 days. I try to walk regularly.", "3 times a week at the gym.", "Around 3 days."],
+  4: ["4 days a week. I walk or jog most mornings.", "About 4 days."],
+  5: ["5 days. I'm pretty active.", "5 times a week at the gym."],
+  7: ["Every day! I love being active.", "All 7 days — even just a walk counts."],
+};
+
+const Q12_SCALE = [2, 3, 3, 3, 4, 4, 4, 4, 5, 5, 3, 4]; // avg ~3.7
+const Q12_RESPONSES: Record<number, string[]> = {
+  2: ["A 2. The nearest grocery store is far.", "Maybe a 2. Healthy food is too expensive here."],
+  3: ["A 3. It's okay. Healthy food is pricey though.", "A 3. The grocery store is a bit far.", "I'd say 3. Limited options in my area."],
+  4: ["A 4. We have good grocery stores nearby.", "I'd give it a 4. Pretty good options.", "A 4. Farmer's market helps in summer."],
+  5: ["A 5! Great grocery stores and farmer's markets.", "5. We have excellent options nearby."],
+};
+
+const Q13_SCALE = [2, 3, 3, 3, 4, 4, 4, 4, 5, 5, 3, 4]; // avg ~3.7
+const Q13_RESPONSES: Record<number, string[]> = {
+  2: ["A 2. I have some chronic conditions.", "Maybe a 2. Could be much better."],
+  3: ["A 3. Average I guess.", "I'd say 3. Getting older takes its toll.", "A 3 for my age."],
+  4: ["A 4. Pretty healthy overall.", "I'd say a 4. I take care of myself.", "A 4. No major complaints."],
+  5: ["A 5! Feeling great.", "5. I'm very healthy, thankfully.", "A 5. I prioritize my health."],
+};
+
+const Q14_RESPONSES = [
+  { raw: "My family doctor, always.", value: "Family doctor" },
+  { raw: "My primary care physician.", value: "Family doctor" },
+  { raw: "I go to urgent care. Faster than waiting for my doctor.", value: "Urgent care" },
+  { raw: "Urgent care, usually.", value: "Urgent care" },
+  { raw: "The emergency room, unfortunately.", value: "Emergency room" },
+  { raw: "I usually just wait it out, honestly.", value: "Stay home" },
+  { raw: "My family doctor if I can get in. Otherwise urgent care.", value: "Family doctor" },
+  { raw: "A walk-in clinic near my house.", value: "Walk-in clinic" },
+  { raw: "Telehealth first, then my doctor if needed.", value: "Telehealth" },
+  { raw: "Community health clinic.", value: "Community clinic" },
+  { raw: "My family doctor. Same one for years.", value: "Family doctor" },
+  { raw: "I go to the ER. I don't have a regular doctor.", value: "Emergency room" },
+];
+
+const AGE_RANGES = ["18-24", "25-34", "25-34", "35-44", "35-44", "35-44", "45-54", "45-54", "55-64", "55-64", "65+", "65+"];
+const ZIP_CODES = ["53132", "53132", "53132", "53154", "53154", "53130", "53221", "53132", "53154", "53130"];
+
+const SUMMARIES_POSITIVE = [
+  "Engaged resident with thoughtful responses. Values community parks and healthcare access.",
+  "Very enthusiastic about Franklin. Highlighted strong community bonds and good schools.",
+  "Positive about the community. Concerned about mental health access but overall satisfied.",
+  "Long-time resident who feels connected. Mentioned parks and recreation as key strengths.",
+  "Parent focused on youth health and education. Appreciates Franklin's safety and schools.",
+  "Active community member. Concerned about substance abuse but optimistic about Franklin's future.",
+  "Resident values walkability and green spaces. Positive about food access and healthcare.",
+  "Senior resident, very engaged. Appreciates the community's support for older adults.",
+  "Young professional who feels Franklin is a great place to live. Wants more social events.",
+  "Family-oriented resident. Praised schools and parks. Concerned about mental health wait times.",
+];
+
+const SUMMARIES_NEUTRAL = [
+  "Resident completed the survey with mixed feelings. Some things are good, some need work.",
+  "Middle-of-the-road responses. Concerned about healthcare costs and access.",
+  "Newer resident still getting to know the community. Feels somewhat disconnected.",
+  "Resident had balanced views. Appreciates safety but wants better mental health resources.",
+  "Completed most questions. Feels Franklin is average compared to other communities.",
+  "Pragmatic responses. Sees both strengths and weaknesses in community health.",
+];
+
+const SUMMARIES_NEGATIVE = [
+  "Frustrated with mental health access and healthcare costs. Feels unheard by the city.",
+  "Concerned about substance abuse and lack of resources. Pessimistic about change.",
+  "Resident feels disconnected and overlooked. Difficulty accessing affordable healthcare.",
+  "Unhappy with mental health services and community engagement opportunities.",
+];
+
+const SUMMARIES_SHORT = [
+  "Caller ended early after a few questions.",
+  "Partial survey — caller had to go but provided some useful data.",
+  "Brief call. Answered initial questions before ending early.",
+  "Caller started survey but didn't have time to finish.",
+];
+
+const GREETINGS_USER = [
+  "Yes, I'd love to participate!",
+  "Sure, let's do it!",
+  "Yes please, sounds important.",
+  "Okay, I can do that.",
+  "Yeah, go ahead.",
+  "Yes! I saw the poster about this.",
+  "Sure thing. Happy to help.",
+  "Hi, yes I'd like to take the survey.",
+  "Go ahead, I have a few minutes.",
+  "Yes, let's get started.",
+  "Absolutely, I think this is a great initiative.",
+  "Sure, I've got about 10 minutes.",
+];
+
+// --- Question Definitions ---
+const QUESTIONS = [
+  { num: 1, section: "Community Health Perception", text: "What are the most important factors for a healthy community?", type: "open_ended" },
+  { num: 2, section: "Community Health Perception", text: "What are the most important health problems in Franklin?", type: "open_ended" },
+  { num: 3, section: "Community Health Perception", text: "What risky behaviors have the biggest impact on community health?", type: "open_ended" },
+  { num: 4, section: "Community Health Perception", text: "Rate Franklin as a healthy community (1-5)", type: "scale" },
+  { num: 5, section: "Community Connectedness", text: "How connected do you feel to the Franklin community? (1-5)", type: "scale" },
+  { num: 6, section: "Community Connectedness", text: "Do you feel seen and heard in your community?", type: "yes_no" },
+  { num: 7, section: "Community Connectedness", text: "What would help you feel more connected?", type: "open_ended" },
+  { num: 8, section: "Mental & Behavioral Health", text: "Rate your access to mental health resources (1-5)", type: "scale" },
+  { num: 9, section: "Mental & Behavioral Health", text: "Have you or family had difficulty accessing mental health services in past 12 months?", type: "yes_no" },
+  { num: 10, section: "Mental & Behavioral Health", text: "What barriers have you experienced accessing mental/behavioral health support?", type: "open_ended" },
+  { num: 11, section: "Physical Activity & Nutrition", text: "How many days per week do you exercise for 30+ minutes?", type: "multiple_choice" },
+  { num: 12, section: "Physical Activity & Nutrition", text: "Rate your access to affordable healthy food (1-5)", type: "scale" },
+  { num: 13, section: "Healthcare Access", text: "Rate your own personal health (1-5)", type: "scale" },
+  { num: 14, section: "Healthcare Access", text: "Where do you go first when sick?", type: "multiple_choice" },
+  { num: 15, section: "Demographics", text: "Age range and zip code", type: "demographic" },
+];
+
+// --- Generate Responses for a Call ---
+function generateResponses(questionsAnswered: number) {
+  const responses: Array<{
+    question_number: number;
+    question_section: string;
+    question_text: string;
+    response_type: string;
+    response_raw: string;
+    response_numeric: number | null;
+    response_boolean: boolean | null;
+  }> = [];
+
+  const questionsToAnswer = QUESTIONS.slice(0, questionsAnswered);
+  // For partial completions, sometimes skip random questions
+  const skipChance = questionsAnswered < 15 ? 0.15 : 0.05;
+
+  for (const q of questionsToAnswer) {
+    if (Math.random() < skipChance && q.num > 1) continue;
+
+    let raw = "";
+    let numeric: number | null = null;
+    let bool: boolean | null = null;
+
+    switch (q.num) {
+      case 1: raw = pick(Q1_RESPONSES); break;
+      case 2: raw = pick(Q2_RESPONSES); break;
+      case 3: raw = pick(Q3_RESPONSES); break;
+      case 4: { const v = pick(Q4_SCALE); numeric = v; raw = pick(Q4_RESPONSES[v] || Q4_RESPONSES[3]); break; }
+      case 5: { const v = pick(Q5_SCALE); numeric = v; raw = pick(Q5_RESPONSES[v] || Q5_RESPONSES[3]); break; }
+      case 6: { const v = pick(Q6_YES_NO); bool = v; raw = pick(Q6_RESPONSES[v ? "yes" : "no"]); break; }
+      case 7: raw = pick(Q7_RESPONSES); break;
+      case 8: { const v = pick(Q8_SCALE); numeric = v; raw = pick(Q8_RESPONSES[v] || Q8_RESPONSES[3]); break; }
+      case 9: { const v = pick(Q9_YES_NO); bool = v; raw = pick(Q9_RESPONSES[v ? "yes" : "no"]); break; }
+      case 10: raw = pick(Q10_RESPONSES); break;
+      case 11: { const v = pick(Q11_VALUES); numeric = v; raw = pick(Q11_RESPONSES[v] || Q11_RESPONSES[3]); break; }
+      case 12: { const v = pick(Q12_SCALE); numeric = v; raw = pick(Q12_RESPONSES[v] || Q12_RESPONSES[3]); break; }
+      case 13: { const v = pick(Q13_SCALE); numeric = v; raw = pick(Q13_RESPONSES[v] || Q13_RESPONSES[3]); break; }
+      case 14: { const r = pick(Q14_RESPONSES); raw = r.raw; break; }
+      case 15: { const age = pick(AGE_RANGES); const zip = pick(ZIP_CODES); raw = `${age}, zip ${zip}.`; break; }
+    }
+
+    responses.push({
+      question_number: q.num,
+      question_section: q.section,
+      question_text: q.text,
+      response_type: q.type,
+      response_raw: raw,
+      response_numeric: numeric,
+      response_boolean: bool,
+    });
+  }
+
+  return responses;
+}
+
+// --- Generate 58 Calls across Jan-Feb 2026 ---
+interface CallData {
+  retell_call_id: string;
+  call_status: string;
+  started_at: string;
+  ended_at: string;
+  duration_seconds: number;
+  questions_answered: number;
+  completion_rate: number;
+  sentiment: string;
+  call_summary: string;
+  transcript: Array<{ role: string; content: string }>;
+}
+
+function generateCalls(): CallData[] {
+  const calls: CallData[] = [];
+
+  // Jan 2026: 22 calls (slow start), Feb 2026: 36 calls (ramping up)
+  const janDays = [3, 5, 7, 8, 10, 12, 13, 14, 16, 17, 19, 20, 21, 23, 24, 25, 27, 28, 29, 30, 31, 31];
+  const febDays = [1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 21, 22, 23, 24, 24, 25, 25, 26, 26, 27, 27, 28, 28, 28];
+
+  const allDates: { month: number; day: number }[] = [
+    ...janDays.map((d) => ({ month: 1, day: d })),
+    ...febDays.map((d) => ({ month: 2, day: d })),
+  ];
+
+  for (let i = 0; i < allDates.length; i++) {
+    const { month, day } = allDates[i];
+    const callNum = String(i + 1).padStart(3, "0");
+    const hour = randInt(9, 19);
+    const minute = randInt(0, 59);
+    const startDate = `2026-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}T${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}:00Z`;
+
+    // Determine completion level: 65% full, 20% partial (8-14), 15% early drop (1-4)
+    const completionType = weightedPick(["full", "partial", "early"], [65, 20, 15]);
+    let questionsAnswered: number;
+    let sentiment: string;
+    let summary: string;
+
+    if (completionType === "full") {
+      questionsAnswered = 15;
+      sentiment = weightedPick(["positive", "neutral", "negative"], [60, 30, 10]);
+      summary = sentiment === "positive" ? pick(SUMMARIES_POSITIVE) :
+                sentiment === "neutral" ? pick(SUMMARIES_NEUTRAL) : pick(SUMMARIES_NEGATIVE);
+    } else if (completionType === "partial") {
+      questionsAnswered = randInt(8, 14);
+      sentiment = weightedPick(["positive", "neutral", "negative"], [30, 50, 20]);
+      summary = sentiment === "negative" ? pick(SUMMARIES_NEGATIVE) : pick(SUMMARIES_NEUTRAL);
+    } else {
+      questionsAnswered = randInt(1, 4);
+      sentiment = weightedPick(["neutral", "negative"], [40, 60]);
+      summary = pick(SUMMARIES_SHORT);
+    }
+
+    const completionRate = Math.round((questionsAnswered / 15) * 10000) / 100;
+    // Duration: ~30s per question + 30s for intro/closing
+    const duration = questionsAnswered * randInt(25, 40) + randInt(20, 60);
+
+    const endMinutes = minute + Math.floor(duration / 60);
+    const endHour = hour + Math.floor(endMinutes / 60);
+    const endDate = `2026-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}T${String(endHour % 24).padStart(2, "0")}:${String(endMinutes % 60).padStart(2, "0")}:${String(duration % 60).padStart(2, "0")}Z`;
+
+    const transcript = [
+      { role: "agent", content: "Hi there! Thank you for calling the Franklin Community Health Survey Line. I'm here to help collect your input for the City of Franklin's Community Health Assessment. This is a short, confidential survey — it takes about 7 to 8 minutes. Would you like to go ahead?" },
+      { role: "user", content: pick(GREETINGS_USER) },
+    ];
+
+    calls.push({
+      retell_call_id: `call_cha_${callNum}`,
+      call_status: "completed",
+      started_at: startDate,
+      ended_at: endDate,
+      duration_seconds: duration,
+      questions_answered: questionsAnswered,
+      completion_rate: completionRate,
+      sentiment,
+      call_summary: summary,
+      transcript,
+    });
+  }
+
+  return calls;
+}
+
+// --- Seed ---
+async function seed() {
+  console.log("Clearing existing data...");
+  await supabase.from("survey_responses").delete().neq("id", "00000000-0000-0000-0000-000000000000");
+  await supabase.from("calls").delete().neq("id", "00000000-0000-0000-0000-000000000000");
+  console.log("Existing data cleared.\n");
+
+  const calls = generateCalls();
+  console.log(`Seeding ${calls.length} calls across Jan-Feb 2026...\n`);
+
+  let successCount = 0;
+  let responseCount = 0;
+
+  for (const call of calls) {
     const { data: callRecord, error: callError } = await supabase
       .from("calls")
       .upsert(
@@ -293,26 +429,27 @@ async function seed() {
       .single();
 
     if (callError) {
-      console.error(`Error inserting call ${call.retell_call_id}:`, callError);
+      console.error(`Error inserting ${call.retell_call_id}:`, callError.message);
       continue;
     }
 
-    console.log(`Inserted call: ${call.retell_call_id} -> ${callRecord.id}`);
-
-    const responses = RESPONSES_DATA[call.retell_call_id];
-    if (responses && callRecord) {
-      await supabase.from("survey_responses").delete().eq("call_id", callRecord.id);
+    const responses = generateResponses(call.questions_answered);
+    if (responses.length > 0 && callRecord) {
       const rows = responses.map((r) => ({ ...r, call_id: callRecord.id }));
       const { error: respError } = await supabase.from("survey_responses").insert(rows);
       if (respError) {
-        console.error(`Error inserting responses for ${call.retell_call_id}:`, respError);
+        console.error(`Error inserting responses for ${call.retell_call_id}:`, respError.message);
       } else {
-        console.log(`  -> Inserted ${rows.length} responses`);
+        responseCount += rows.length;
       }
     }
+
+    successCount++;
+    const date = call.started_at.slice(0, 10);
+    console.log(`[${successCount}/${calls.length}] ${call.retell_call_id} | ${date} | ${call.questions_answered}Q | ${call.sentiment}`);
   }
 
-  console.log("Done!");
+  console.log(`\nDone! Inserted ${successCount} calls with ${responseCount} total survey responses.`);
 }
 
 seed();

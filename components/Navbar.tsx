@@ -50,6 +50,16 @@ export default function Navbar() {
             >
               Calls
             </Link>
+            <Link
+              href="/pitch"
+              className={`text-sm font-medium transition-colors ${
+                pathname?.startsWith("/pitch")
+                  ? "text-amber-400"
+                  : "text-white/50 hover:text-white"
+              }`}
+            >
+              Pitch
+            </Link>
           </div>
         </div>
       </div>
